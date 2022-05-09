@@ -54,6 +54,11 @@ class App {
           this.delete();
           return;
         }
+        if (key.keyCode === 20) {
+          this.isCapsLockPressed = !this.isCapsLockPressed;
+          this.toggleCapsLock();
+          key.element.classList.toggle('caps-lock_active');
+        }
       }
 
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
@@ -96,6 +101,11 @@ class App {
           this.delete();
           this.setCaretPosition(this.cursorPos);
           return;
+        }
+        if (key.keyCode === 20) {
+          this.isCapsLockPressed = !this.isCapsLockPressed;
+          this.toggleCapsLock();
+          key.element.classList.toggle('caps-lock_active');
         }
       }
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
@@ -145,6 +155,16 @@ class App {
       + textArea.textContent.slice(cursorPosition + 1);
     } else {
       textArea.textContent = textArea.textContent.slice(0, length - 1);
+    }
+  }
+
+  toggleCapsLock() {
+    if (this.isCapsLockPressed) {
+      this.keyboard.keys.forEach(item => item.makeCaps());
+      localStorage.setItem('capsed', JSON.stringify(this.isCapsLockPressed));
+    } else {
+      this.keyboard.keys.forEach(item => item.makeLower());
+      localStorage.setItem('capsed', JSON.stringify(this.isCapsLockPressed));
     }
   }
 

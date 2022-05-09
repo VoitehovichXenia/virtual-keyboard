@@ -83,6 +83,22 @@ class Key {
   removeHighlight() {
     this.element.classList.remove('key_pressed');
   }
+
+  makeCaps() {
+    if (this.isCapsed) {
+      this.element.textContent = this.secondValue;
+      this.element.value = this.secondValue;
+      this.state = 'capsed';
+    }
+  }
+
+  makeLower() {
+    if (this.isCapsed) {
+      this.element.textContent = this.value;
+      this.element.value = this.value;
+      this.state = 'initial';
+    }
+  }
 }
 
 export default Key;
