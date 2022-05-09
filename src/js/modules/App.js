@@ -50,6 +50,10 @@ class App {
           this.backspace();
           return;
         }
+        if (key.keyCode === 46) {
+          this.delete();
+          return;
+        }
       }
 
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
@@ -61,6 +65,12 @@ class App {
       if (key) {
         if (key.keyCode === 8) {
           this.setCaretPosition(this.cursorPos);
+          key.removeHighlight();
+          return;
+        }
+        if (key.keyCode === 46) {
+          this.setCaretPosition(this.cursorPos);
+          key.removeHighlight();
           return;
         }
 
@@ -79,6 +89,11 @@ class App {
 
         if (key.keyCode === 8) {
           this.backspace();
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
+        if (key.keyCode === 46) {
+          this.delete();
           this.setCaretPosition(this.cursorPos);
           return;
         }
@@ -117,6 +132,19 @@ class App {
       this.cursorPos -= 1;
     } else {
       this.cursorPos = 0;
+    }
+  }
+
+  delete() {
+    const textArea = this.elements.textArea;
+    let cursorPosition = this.cursorPos;
+    const length = textArea.textContent.length;
+
+    if (cursorPosition !== length - 1) {
+      textArea.textContent = textArea.textContent.slice(0, cursorPosition)
+      + textArea.textContent.slice(cursorPosition + 1);
+    } else {
+      textArea.textContent = textArea.textContent.slice(0, length - 1);
     }
   }
 
