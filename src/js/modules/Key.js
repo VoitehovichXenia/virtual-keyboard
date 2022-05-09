@@ -99,6 +99,22 @@ class Key {
       this.state = 'initial';
     }
   }
+
+  showSecondValue() {
+    if (/[^\n\t\s]/.test(this.secondValue) && this.secondValue && this.state === 'initial') {
+      this.element.textContent = this.secondValue;
+      this.element.value = this.secondValue;
+      this.state = 'second value';
+    }
+  }
+
+  showInitialValue() {
+    if (this.state === 'second value') {
+      this.element.textContent = this.value;
+      this.element.value = this.value;
+      this.state = 'initial';
+    }
+  }
 }
 
 export default Key;

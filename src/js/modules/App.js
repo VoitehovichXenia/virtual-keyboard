@@ -42,7 +42,9 @@ class App {
 
     el.keyboardElement.addEventListener('mousedown', event => {
       const code = +event.target.id;
-      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      const keysArr = this.keyboard.keys;
+      const key = keysArr.find(item => item.keyCode === code);
+
       if (key) {
         key.highlight();
 
@@ -58,6 +60,9 @@ class App {
           this.isCapsLockPressed = !this.isCapsLockPressed;
           this.toggleCapsLock();
           key.element.classList.toggle('caps-lock_active');
+        } else if (key.keyCode === 16) {
+          this.isShiftPressed = true;
+          keysArr.forEach(item => item.showSecondValue());
         }
       }
 
@@ -66,7 +71,9 @@ class App {
 
     el.keyboardElement.addEventListener('mouseup', event => {
       const code = +event.target.id;
-      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      const keysArr = this.keyboard.keys;
+      const key = keysArr.find(item => item.keyCode === code);
+
       if (key) {
         if (key.keyCode === 8) {
           this.setCaretPosition(this.cursorPos);
@@ -77,6 +84,10 @@ class App {
           this.setCaretPosition(this.cursorPos);
           key.removeHighlight();
           return;
+        }
+        if (key.keyCode === 16) {
+          keysArr.forEach(item => item.showInitialValue());
+          this.isShiftPressed = false;
         }
 
         key.removeHighlight();
@@ -88,7 +99,8 @@ class App {
       event.preventDefault();
 
       const code = event.keyCode;
-      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      const keysArr = this.keyboard.keys;
+      const key = keysArr.find(item => item.keyCode === code);
       if (key) {
         key.highlight();
 
@@ -106,6 +118,9 @@ class App {
           this.isCapsLockPressed = !this.isCapsLockPressed;
           this.toggleCapsLock();
           key.element.classList.toggle('caps-lock_active');
+        } else if (key.keyCode === 16) {
+          this.isShiftPressed = true;
+          keysArr.forEach(item => item.showSecondValue());
         }
       }
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
@@ -113,8 +128,16 @@ class App {
     });
 
     window.addEventListener('keyup', event => {
-      const key = this.keyboard.keys.find(item => item.keyCode === event.keyCode);
-      key.removeHighlight();
+      const keysArr = this.keyboard.keys;
+      const key = keysArr.find(item => item.keyCode === event.keyCode);
+      if (key) {
+        if (key.keyCode === 16) {
+          keysArr.forEach(item => item.showInitialValue());
+          this.isShiftPressed = false;
+        }
+
+        key.removeHighlight();
+      }
     });
 
     el.wrapper.append(el.textArea, el.keyboardElement);
