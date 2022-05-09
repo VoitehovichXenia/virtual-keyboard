@@ -1,0 +1,188 @@
+@import url(normilize.css);
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+:root {
+    --key-size: 4vw;
+    --key-color: #5abcb980;
+    --key-color-hover: #5abcb9;
+    --keyboard-color: rgb(241, 241, 241);
+    --font-color: #383838;
+    --placeholder-color: #1f5c5a;
+}
+
+html {
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+}
+
+button {
+    border: none;
+    outline: none;
+}
+
+button:focus {
+    outline: none;
+}
+
+#area {
+    outline: none;
+    width: 90%;
+    margin: 0 auto;
+    padding: 10px;
+    border: 1px solid var(--key-color-hover);
+    border-radius: 5px;
+    background-color: var(--keyboard-color);
+}
+
+#area::placeholder {
+    color: var(--placeholder-color);
+}
+
+.heading {
+    text-align: center;
+    margin: 0;
+    padding: 40px 0 10px;
+    color: var(--placeholder-color);
+}
+
+.subtitle {
+    font-weight: 400;
+    text-align: center;
+    margin: 0;
+    padding: 0 0 40px;
+    font-size: 18px;
+    color: var(--placeholder-color);
+}
+
+.wrapper {
+    display: grid;
+    grid-template-rows: max-content 1fr max-content;
+    gap: 40px 0;
+    max-width: 1440px;
+    padding: 1vh 0;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.keyboard {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(60, calc(var(--key-size) / 8));
+    grid-template-rows: repeat(5, var(--key-size));
+    gap: calc(var(--key-size) / 4);
+    border-radius: 5px;
+    background-color: var(--keyboard-color);
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 10px;
+}
+
+.key {
+    grid-column: auto / span 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 5px;
+    color: var(--font-color);
+    font-weight: 700;
+    background-color: var(--key-color);
+    box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.3);
+    transition: 0.3s;
+}
+
+.key:hover {
+    background-color: var(--key-color-hover);
+}
+
+.key_pressed {
+    transform: scale(1.1);
+    background-color: lightcoral;
+    box-shadow: none;
+}
+
+.key_pressed:hover {
+    background-color: lightcoral;
+}
+
+.caps-lock {
+    position: relative;
+}
+
+.caps-lock::after {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    width: 7px;
+    height: 7px;
+    border-radius: 5px;
+    background-color: var(--font-color);
+    transition: 0.3s;
+}
+
+.caps-lock_active::after {
+    background-color: #fff;
+}
+
+.del,
+.dash,
+.r-ctrl,
+.r-alt {
+    grid-column-start: span 3;
+}
+
+.tab,
+.l-alt,
+.l-ctrl {
+    grid-column-start: span 6;
+}
+
+.r-shift {
+    grid-column-start: span 7;
+}
+
+.backspace,
+.enter,
+.caps-lock {
+    grid-column-start: span 8;
+}
+
+.l-shift {
+    grid-column-start: span 9;
+}
+
+.space {
+    grid-column-start: span 30;
+}
+
+@media screen and (max-width: 1098.99px) {
+    .key {
+        font-size: 1.5vw;
+    }
+
+    .caps-lock::after {
+        top: 10px;
+        right: 5px;
+        width: 4px;
+        height: 4px;
+    }
+}
+
+@media screen and (max-width: 767.98px) {
+    .caps-lock::after {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 559.98px) {    
+    .heading {
+        font-size: 28px;
+    }
+    
+    .keyboard {
+        grid-template-rows: repeat(5, 6vw);
+    }
+}
