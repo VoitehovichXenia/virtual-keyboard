@@ -11,6 +11,7 @@ class App {
     };
 
     this.keyboard = null;
+    this.cursorPos = 0;
   }
 
   renderMainPage() {
@@ -29,6 +30,10 @@ class App {
     el.textArea.autofocus = true;
     el.textArea.placeholder = 'Start typing here';
 
+    el.textArea.addEventListener('click', () => {
+      this.cursorPos = this.elements.textArea.selectionStart;
+    });
+
     el.wrapper = document.createElement('div');
     el.wrapper.classList.add('wrapper');
 
@@ -46,13 +51,17 @@ class App {
       const code = +event.target.id;
       const key = this.keyboard.keys.find(item => item.keyCode === code);
       if (key) key.removeHighlight();
+      this.setCaretPosition(this.cursorPos + 1);
     });
 
     window.addEventListener('keydown', event => {
-      const code = +event.target.id;
+      event.preventDefault();
+
+      const code = event.keyCode;
       const key = this.keyboard.keys.find(item => item.keyCode === code);
       if (key) key.highlight();
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+      this.setCaretPosition(this.cursorPos + 1);
     });
 
     window.addEventListener('keyup', event => {
@@ -62,6 +71,23 @@ class App {
 
     el.wrapper.append(el.textArea, el.keyboardElement);
     document.body.append(el.heading, el.subtitle, el.wrapper);
+  }
+
+  addSymbol(symbol, position) {
+    if (!position || position === this.elements.textArea.textContent.length) {
+      this.elements.textArea.textContent += symbol;
+    } else {
+      let before = this.elements.textArea.textContent.slice(0, position);
+      let after = this.elements.textArea.textContent.slice(position);
+
+      this.elements.textArea.textContent = before + symbol + after;
+    }
+  }
+
+  setCaretPosition(newPosition) {
+    this.cursorPos = newPosition;
+    this.elements.textArea.focus();
+    this.elements.textArea.selectionStart = newPosition;
   }
 }
 
