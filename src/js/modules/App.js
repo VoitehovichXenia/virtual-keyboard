@@ -43,7 +43,11 @@ class App {
     el.keyboardElement.addEventListener('mousedown', event => {
       const code = +event.target.id;
       const keysArr = this.keyboard.keys;
-      const key = keysArr.find(item => item.keyCode === code);
+      const type = event.target.getAttribute('data-type');
+      const key = keysArr.find(item => {
+        if (type) return item.keyCode === code && item.type === type;
+        return item.keyCode === code;
+      });
 
       if (key) {
         key.highlight();
@@ -63,6 +67,20 @@ class App {
         } else if (key.keyCode === 16) {
           this.isShiftPressed = true;
           keysArr.forEach(item => item.showSecondValue());
+        } else if (key.keyCode === 17 && key.type === 'left') {
+          this.isCtrlPressed = !this.isCtrlPressed;
+          if (this.isCtrlPressed && this.isAltPressed) {
+            this.changeLangHandler();
+            this.isAltPressed = false;
+            this.isCtrlPressed = false;
+          }
+        } else if (key.keyCode === 18 && key.type === 'left') {
+          this.isAltPressed = !this.isAltPressed;
+          if (this.isCtrlPressed && this.isAltPressed) {
+            this.changeLangHandler();
+            this.isAltPressed = false;
+            this.isCtrlPressed = false;
+          }
         }
       }
 
@@ -72,7 +90,11 @@ class App {
     el.keyboardElement.addEventListener('mouseup', event => {
       const code = +event.target.id;
       const keysArr = this.keyboard.keys;
-      const key = keysArr.find(item => item.keyCode === code);
+      const type = event.target.getAttribute('data-type');
+      const key = keysArr.find(item => {
+        if (type) return item.keyCode === code && item.type === type;
+        return item.keyCode === code;
+      });
 
       if (key) {
         if (key.keyCode === 8) {
@@ -88,10 +110,25 @@ class App {
         if (key.keyCode === 16) {
           keysArr.forEach(item => item.showInitialValue());
           this.isShiftPressed = false;
+        } else if (key.keyCode === 18 && key.type === 'left') {
+          if (!this.isAltPressed) key.removeHighlight();
+          if (!this.isCtrlPressed) {
+            let ctrl = this.keyboard.keys.find(item => item.keyCode === 17 && item.type === 'left');
+            ctrl.removeHighlight();
+          }
+          return;
+        } else if (key.keyCode === 17 && key.type === 'left') {
+          if (!this.isCtrlPressed) key.removeHighlight();
+          if (!this.isAltPressed) {
+            let alt = this.keyboard.keys.find(item => item.keyCode === 18 && item.type === 'left');
+            alt.removeHighlight();
+          }
+          return;
         }
 
         key.removeHighlight();
       }
+
       this.setCaretPosition(this.cursorPos + 1);
     });
 
@@ -100,7 +137,14 @@ class App {
 
       const code = event.keyCode;
       const keysArr = this.keyboard.keys;
-      const key = keysArr.find(item => item.keyCode === code);
+      const type = event.code.toLowerCase();
+      const key = keysArr.find(item => {
+        if (code === 18 || code === 17) {
+          return item.keyCode === code && type.indexOf(item.type) >= 0;
+        }
+        return item.keyCode === code;
+      });
+
       if (key) {
         key.highlight();
 
@@ -121,19 +165,38 @@ class App {
         } else if (key.keyCode === 16) {
           this.isShiftPressed = true;
           keysArr.forEach(item => item.showSecondValue());
+        } else if (key.keyCode === 17 && key.type === 'left') {
+          this.isCtrlPressed = true;
+          if (this.isCtrlPressed && this.isAltPressed) this.changeLangHandler();
+        } else if (key.keyCode === 18 && key.type === 'left') {
+          this.isAltPressed = true;
+          if (this.isCtrlPressed && this.isAltPressed) this.changeLangHandler();
         }
       }
+
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
       this.setCaretPosition(this.cursorPos + 1);
     });
 
     window.addEventListener('keyup', event => {
+      const code = event.keyCode;
       const keysArr = this.keyboard.keys;
-      const key = keysArr.find(item => item.keyCode === event.keyCode);
+      const type = event.code.toLowerCase();
+      const key = keysArr.find(item => {
+        if (code === 18 || code === 17) {
+          return item.keyCode === code && type.indexOf(item.type) >= 0;
+        }
+        return item.keyCode === code;
+      });
+
       if (key) {
         if (key.keyCode === 16) {
           keysArr.forEach(item => item.showInitialValue());
           this.isShiftPressed = false;
+        } else if (key.keyCode === 18 && key.type === 'left') {
+          this.isAltPressed = false;
+        } else if (key.keyCode === 17 && key.type === 'left') {
+          this.isCtrlPressed = false;
         }
 
         key.removeHighlight();
@@ -189,6 +252,20 @@ class App {
       this.keyboard.keys.forEach(item => item.makeLower());
       localStorage.setItem('capsed', JSON.stringify(this.isCapsLockPressed));
     }
+  }
+
+  changeLangHandler() {
+    const keysArr = this.keyboard.keys;
+    this.language = this.language === 'en' ? 'ru' : 'en';
+
+    keysArr.forEach(item => {
+      item.changeLang(this.language);
+      if (this.isCapsLockPressed) {
+        item.makeCaps();
+      }
+    });
+
+    localStorage.setItem('lang', this.language);
   }
 
   setCaretPosition(newPosition) {

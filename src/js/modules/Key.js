@@ -115,6 +115,13 @@ class Key {
       this.state = 'initial';
     }
   }
+
+  changeLang(lang) {
+    this.language = lang;
+    this.init();
+    this.element.textContent = this.name;
+    this.element.value = this.value;
+  }
 }
 
 export default Key;
