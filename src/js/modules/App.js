@@ -35,8 +35,32 @@ class App {
     this.keyboard = new Keyboard();
     el.keyboardElement = this.keyboard.render();
 
-    el.wrapper.append(el.textArea, el.keyboardElement);
+    el.keyboardElement.addEventListener('mousedown', event => {
+      const code = +event.target.id;
+      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      if (key) key.highlight();
+      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+    });
 
+    el.keyboardElement.addEventListener('mouseup', event => {
+      const code = +event.target.id;
+      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      if (key) key.removeHighlight();
+    });
+
+    window.addEventListener('keydown', event => {
+      const code = +event.target.id;
+      const key = this.keyboard.keys.find(item => item.keyCode === code);
+      if (key) key.highlight();
+      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+    });
+
+    window.addEventListener('keyup', event => {
+      const key = this.keyboard.keys.find(item => item.keyCode === event.keyCode);
+      key.removeHighlight();
+    });
+
+    el.wrapper.append(el.textArea, el.keyboardElement);
     document.body.append(el.heading, el.subtitle, el.wrapper);
   }
 }

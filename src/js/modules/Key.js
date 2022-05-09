@@ -75,6 +75,14 @@ class Key {
 
     return this.element;
   }
+
+  highlight() {
+    this.element.classList.add('key_pressed');
+  }
+
+  removeHighlight() {
+    this.element.classList.remove('key_pressed');
+  }
 }
 
 export default Key;
