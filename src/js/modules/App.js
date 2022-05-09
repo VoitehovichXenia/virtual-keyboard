@@ -43,14 +43,29 @@ class App {
     el.keyboardElement.addEventListener('mousedown', event => {
       const code = +event.target.id;
       const key = this.keyboard.keys.find(item => item.keyCode === code);
-      if (key) key.highlight();
+      if (key) {
+        key.highlight();
+
+        if (key.keyCode === 8) {
+          this.backspace();
+          return;
+        }
+      }
+
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
     });
 
     el.keyboardElement.addEventListener('mouseup', event => {
       const code = +event.target.id;
       const key = this.keyboard.keys.find(item => item.keyCode === code);
-      if (key) key.removeHighlight();
+      if (key) {
+        if (key.keyCode === 8) {
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
+
+        key.removeHighlight();
+      }
       this.setCaretPosition(this.cursorPos + 1);
     });
 
@@ -59,7 +74,15 @@ class App {
 
       const code = event.keyCode;
       const key = this.keyboard.keys.find(item => item.keyCode === code);
-      if (key) key.highlight();
+      if (key) {
+        key.highlight();
+
+        if (key.keyCode === 8) {
+          this.backspace();
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
+      }
       if (key.value) this.addSymbol(key.element.value, this.cursorPos);
       this.setCaretPosition(this.cursorPos + 1);
     });
@@ -81,6 +104,19 @@ class App {
       let after = this.elements.textArea.textContent.slice(position);
 
       this.elements.textArea.textContent = before + symbol + after;
+    }
+  }
+
+  backspace() {
+    const textArea = this.elements.textArea;
+    const cursorPosition = this.cursorPos;
+
+    if (cursorPosition) {
+      textArea.textContent = textArea.textContent.slice(0, cursorPosition - 1)
+       + textArea.textContent.slice(cursorPosition);
+      this.cursorPos -= 1;
+    } else {
+      this.cursorPos = 0;
     }
   }
 
