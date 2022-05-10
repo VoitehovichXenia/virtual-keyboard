@@ -158,6 +158,14 @@ button:focus {
     grid-column-start: span 30;
 }
 
+@media screen and (min-width: 1441px) {
+    .keyboard {
+        grid-template-columns: repeat(60, calc(60px / 8));
+        grid-template-rows: repeat(5, 60px);
+        gap: calc(60px / 4);
+    }
+}
+
 @media screen and (max-width: 1098.99px) {
     .key {
         font-size: 1.5vw;
