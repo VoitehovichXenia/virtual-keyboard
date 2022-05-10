@@ -139,7 +139,7 @@ class App {
       const keysArr = this.keyboard.keys;
       const type = event.code.toLowerCase();
       const key = keysArr.find(item => {
-        if (code === 18 || code === 17) {
+        if (code === 18 || code === 17 || code === 16) {
           return item.keyCode === code && type.indexOf(item.type) >= 0;
         }
         return item.keyCode === code;
@@ -183,7 +183,7 @@ class App {
       const keysArr = this.keyboard.keys;
       const type = event.code.toLowerCase();
       const key = keysArr.find(item => {
-        if (code === 18 || code === 17) {
+        if (code === 18 || code === 17 || code === 16) {
           return item.keyCode === code && type.indexOf(item.type) >= 0;
         }
         return item.keyCode === code;
