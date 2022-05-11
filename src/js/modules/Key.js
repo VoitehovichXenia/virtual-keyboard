@@ -106,6 +106,10 @@ class Key {
       this.element.value = this.secondValue;
       this.state = 'second value';
     }
+    if (this.state === 'capsed') {
+      this.element.textContent = this.value;
+      this.element.value = this.value;
+    }
   }
 
   showInitialValue() {
@@ -113,6 +117,10 @@ class Key {
       this.element.textContent = this.value;
       this.element.value = this.value;
       this.state = 'initial';
+    }
+    if (this.state === 'capsed') {
+      this.element.textContent = this.secondValue;
+      this.element.value = this.secondValue;
     }
   }
 

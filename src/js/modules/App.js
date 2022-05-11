@@ -82,9 +82,9 @@ class App {
             this.isCtrlPressed = false;
           }
         }
-      }
 
-      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+        if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+      }
     });
 
     el.keyboardElement.addEventListener('mouseup', event => {
@@ -110,26 +110,37 @@ class App {
         if (key.keyCode === 16) {
           keysArr.forEach(item => item.showInitialValue());
           this.isShiftPressed = false;
-        } else if (key.keyCode === 18 && key.type === 'left') {
+          key.removeHighlight();
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
+        if (key.keyCode === 18 && key.type === 'left') {
           if (!this.isAltPressed) key.removeHighlight();
           if (!this.isCtrlPressed) {
             let ctrl = this.keyboard.keys.find(item => item.keyCode === 17 && item.type === 'left');
             ctrl.removeHighlight();
           }
+          this.setCaretPosition(this.cursorPos);
           return;
-        } else if (key.keyCode === 17 && key.type === 'left') {
+        }
+        if (key.keyCode === 17 && key.type === 'left') {
           if (!this.isCtrlPressed) key.removeHighlight();
           if (!this.isAltPressed) {
             let alt = this.keyboard.keys.find(item => item.keyCode === 18 && item.type === 'left');
             alt.removeHighlight();
           }
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
+        if (key.keyCode === 18 || key.keyCode === 17) {
+          key.removeHighlight();
+          this.setCaretPosition(this.cursorPos);
           return;
         }
 
         key.removeHighlight();
+        this.setCaretPosition(this.cursorPos + 1);
       }
-
-      this.setCaretPosition(this.cursorPos + 1);
     });
 
     window.addEventListener('keydown', event => {
@@ -162,20 +173,31 @@ class App {
           this.isCapsLockPressed = !this.isCapsLockPressed;
           this.toggleCapsLock();
           key.element.classList.toggle('caps-lock_active');
-        } else if (key.keyCode === 16) {
+          return;
+        }
+        if (key.keyCode === 16) {
           this.isShiftPressed = true;
           keysArr.forEach(item => item.showSecondValue());
-        } else if (key.keyCode === 17 && key.type === 'left') {
+          return;
+        }
+        if (key.keyCode === 17 && key.type === 'left') {
           this.isCtrlPressed = true;
           if (this.isCtrlPressed && this.isAltPressed) this.changeLangHandler();
-        } else if (key.keyCode === 18 && key.type === 'left') {
+          return;
+        }
+        if (key.keyCode === 18 && key.type === 'left') {
           this.isAltPressed = true;
           if (this.isCtrlPressed && this.isAltPressed) this.changeLangHandler();
+          return;
         }
-      }
+        if (key.keyCode === 18 || key.keyCode === 17) {
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
 
-      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
-      this.setCaretPosition(this.cursorPos + 1);
+        if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+        this.setCaretPosition(this.cursorPos + 1);
+      }
     });
 
     window.addEventListener('keyup', event => {
