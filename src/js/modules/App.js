@@ -82,9 +82,9 @@ class App {
             this.isCtrlPressed = false;
           }
         }
-      }
 
-      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+        if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+      }
     });
 
     el.keyboardElement.addEventListener('mouseup', event => {
