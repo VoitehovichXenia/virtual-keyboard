@@ -132,6 +132,11 @@ class App {
           this.setCaretPosition(this.cursorPos);
           return;
         }
+        if (key.keyCode === 18 || key.keyCode === 17) {
+          key.removeHighlight();
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
 
         key.removeHighlight();
         this.setCaretPosition(this.cursorPos + 1);
@@ -185,10 +190,14 @@ class App {
           if (this.isCtrlPressed && this.isAltPressed) this.changeLangHandler();
           return;
         }
-      }
+        if (key.keyCode === 18 || key.keyCode === 17) {
+          this.setCaretPosition(this.cursorPos);
+          return;
+        }
 
-      if (key.value) this.addSymbol(key.element.value, this.cursorPos);
-      this.setCaretPosition(this.cursorPos + 1);
+        if (key.value) this.addSymbol(key.element.value, this.cursorPos);
+        this.setCaretPosition(this.cursorPos + 1);
+      }
     });
 
     window.addEventListener('keyup', event => {
